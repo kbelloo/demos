@@ -49,6 +49,10 @@ d3.csv('sales.csv', (d) => {
          .attr("text-anchor", "start"); 
           
             
+      createBars(results);
+
+
+
 
 
   }).catch((error) => {
@@ -56,6 +60,39 @@ d3.csv('sales.csv', (d) => {
       throw error;
 
   })
+
+
+
+  //create bars function
+
+  function createBars(results){
+
+    let bar = svg.selectAll('.bar-group')
+          .data(results)
+          .enter()
+          .append('g')
+          .attr('class', 'bar-group');  
+      
+      bar.append('rect')
+         .attr('class', 'bar')
+         .attr('x', d => x(d.flavors))
+         .attr('y', d => y(d.sales))
+         .attr('width', x.bandwidth())
+         .attr('height', d => height - y(d.sales))
+         .style('fill', 'steelblue'); 
+
+
+         //adding labels to bar chart
+
+       bar.append('text')
+          .text(d => d.sales)
+          .attr('x', d => x(d.flavors) + (x.bandwidth()/2))
+          .attr('y', d => y(d.sales) - 4)
+          .attr("text-anchor", "middle")
+          .style('font-family', 'sans-serif')
+          .style('font-size', 10);  
+
+  }
 
 
     
