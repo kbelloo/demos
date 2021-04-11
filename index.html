@@ -11,13 +11,40 @@
         font: inherit;  
         vertical-align: baseline; 
       }
+
+      #slider {
+        
+        text-align: center;
+        margin: 20px;
+        font-family: sans-serif;
+        font-size: 10px;
+        line-height: 2;
+      }
+
+      #sales-range{
+
+        vertical-align: bottom;
+      }
+
+      #viz{
+
+        width: 100%;
+        text-align: center;;
+      }
+
     </style>
+
     <script src="https://d3js.org/d3.v6.min.js"></script>
 
   </head>
 
-
   <body>
+
+    <div id="slider">
+      <span>All</span>
+      <input type="range" id="sales-range" value="0">
+      <span>Best sellers</span>
+    </div>
   
     <div id="viz"></div>
     

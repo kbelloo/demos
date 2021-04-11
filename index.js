@@ -52,6 +52,21 @@ d3.csv('sales.csv', (d) => {
       createBars(results);
 
 
+      let rangeSlider = document.getElementById('sales-range');
+
+      rangeSlider.min =0;
+      rangeSlider.max = d3.max(results, d => d.sales);
+
+
+
+      rangeSlider.onchange = function() {
+
+        let filteredData = results.filter(d => d.sales >=  rangeSlider.value);
+
+        createBars(filteredData);
+
+      }
+
 
 
 
@@ -67,30 +82,62 @@ d3.csv('sales.csv', (d) => {
 
   function createBars(results){
 
-    let bar = svg.selectAll('.bar-group')
-          .data(results)
-          .enter()
-          .append('g')
-          .attr('class', 'bar-group');  
-      
-      bar.append('rect')
-         .attr('class', 'bar')
-         .attr('x', d => x(d.flavors))
-         .attr('y', d => y(d.sales))
-         .attr('width', x.bandwidth())
-         .attr('height', d => height - y(d.sales))
-         .style('fill', 'steelblue'); 
+     svg.selectAll('.bar-group')
+          .data(results, d => d.flavors)
+          .join(
+
+              enter => {
+
+                let bar = enter.append('g')
+                .attr('class', 'bar-group')
+                .style('opacity', 1);  
+            
+                bar.append('rect')
+                .attr('class', 'bar')
+                .attr('x', d => x(d.flavors))
+                .attr('y', d => y(0))
+                .attr('width', x.bandwidth())
+                .attr('height', 0)
+                .style('fill', 'steelblue')
+                .transition()
+                .duration(750)
+                .attr('y', d => y(d.sales))
+                .attr('height', d => height - y(d.sales)); 
 
 
-         //adding labels to bar chart
+                //adding labels to bar chart
 
-       bar.append('text')
-          .text(d => d.sales)
-          .attr('x', d => x(d.flavors) + (x.bandwidth()/2))
-          .attr('y', d => y(d.sales) - 4)
-          .attr("text-anchor", "middle")
-          .style('font-family', 'sans-serif')
-          .style('font-size', 10);  
+                bar.append('text')
+                .text(d => d.sales)
+                .attr('x', d => x(d.flavors) + (x.bandwidth()/2))
+                .attr('y', d => y(d.sales) - 4)
+                .attr("text-anchor", "middle")
+                .style('font-family', 'sans-serif')
+                .style('font-size', 10)
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .style('opacity', 1);
+              },
+
+              update => {
+
+                  update.transition()
+                        .duration(750)
+                        .style('opacity', 1)
+              },
+
+              exit => {
+                  
+                   exit.transition()
+                        .duration(750)
+                        .style('opacity', 0.15)
+
+              }
+
+          )
+
+    
 
   }
 
